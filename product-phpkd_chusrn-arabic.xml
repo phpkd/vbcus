@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<product productid="phpkd_chusrn" active="1">
+	<title>äÙÇã ÊÛííÑ ãÚÑÝÇÊ ÇáÃÚÖÇÁ</title>
+	<description />
+	<version>1.0.0</version>
+	<url><![CDATA[http://www.phpkd.org/support/misc.php?do=producthelp&pid=phpkd_chusrn]]></url>
+	<versioncheckurl><![CDATA[http://www.phpkd.org/support/misc.php?do=productcheck&pid=phpkd_chusrn]]></versioncheckurl>
+	<dependencies>
+	</dependencies>
+	<codes>
+		<code version="*">
+			<installcode><![CDATA[$phpkd_chusrn_files = array(
+	DIR . '/includes/phpkd/phpkd_chusrn_plugins.php',
+	DIR . '/includes/phpkd/phpkd_chusrn_functions.php',
+	DIR . '/includes/xml/cpnav_phpkd_chusrn.xml',
+	DIR . '/includes/xml/bitfield_phpkd_chusrn.xml',
+	DIR . '/includes/xml/hooks_phpkd_chusrn.xml',
+	DIR . '/' . $vbulletin->config['Misc']['admincpdir'] . '/phpkd_chusrn.php'
+);
+
+function phpkd_chusrn_files($files)
+{
+	foreach ($files AS $fileid => $file)
+	{
+		if (file_exists($file))
+		{
+			unset($files[$fileid]);
+		}
+	}
+
+	return $files;
+}
+
+
+$phpkd_chusrn_files_not_exists = phpkd_chusrn_files($phpkd_chusrn_files);
+
+if (is_array($phpkd_chusrn_files_not_exists) AND !empty($phpkd_chusrn_files_not_exists))
+{
+	$phpkd_chusrn_absent_files .= "<ol>\n";
+	foreach ($phpkd_chusrn_files_not_exists AS $phpkd_chusrn_absent_file)
+	{
+		$phpkd_chusrn_absent_files .= "\t<li>" . $phpkd_chusrn_absent_file . "</li>\n";
+	}
+	$phpkd_chusrn_absent_files .= "</ol>\n";
+	print_dots_stop();
+	print_cp_message('íÑÌì ÇáÊÃßÏ ãä ÑÝÚ ãáÝÇÊ ÇáãäÊÌ "äÙÇã ÊÛííÑ ãÚÑÝÇÊ ÇáÃÚÖÇÁ" ßÇãáÉ ÈÔßá ÕÍíÍ ÞÈá ÊËÈíÊå!<br /><strong>ÇáãáÝÇÊ ÇáäÇÞÕÉ:</strong>' . $phpkd_chusrn_absent_files);
+}]]></installcode>
+			<uninstallcode />
+		</code>
+		<code version="1.0.0">
+			<installcode><![CDATA[$db->hide_errors();
+$db->query_write("
+CREATE TABLE IF NOT EXISTS `" . TABLE_PREFIX . "phpkd_usernamehistory` (
+		`id` int(10) unsigned NOT NULL auto_increment,
+		`userid` int(10) unsigned NOT NULL default '0',
+		`oldusergroupid` int(10) unsigned NOT NULL default '0',
+		`newusergroupid` int(10) unsigned NOT NULL default '0',
+		`oldusername` varchar(100) NOT NULL default '',
+		`newusername` varchar(100) NOT NULL default '',
+		`action` enum('waiting','approved','auto_approved','denied') NOT NULL default 'approved',
+		`request_dateline` int(10) unsigned NOT NULL default '0',
+		`action_dateline` int(10) unsigned NOT NULL default '0',
+		`processedby` int(10) unsigned NOT NULL default '0',
+		`comment` varchar(250) NOT NULL default '',
+		PRIMARY KEY  (`id`)
+	) ENGINE=MyISAM
+");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` ADD `changeusernameperms` int(10) unsigned NOT NULL default '0'");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` ADD `canchusernameminposts` smallint(5) unsigned NOT NULL default '0'");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` ADD `canchusernameminrep` smallint(5) unsigned NOT NULL default '0'");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` ADD `canchusernameregdays` smallint(5) unsigned NOT NULL default '0'");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` ADD `canchusernamesimlperiod` smallint(5) unsigned NOT NULL default '0'");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` ADD `chusernamemovetype` smallint(6) NOT NULL default '0'");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` ADD `chusernamemoveugb` int(10) unsigned NOT NULL default '0'");
+require_once(DIR . '/includes/class_bitfield_builder.php'); 
+$phpkd_forum_type =& vB_Bitfield_Builder::init();
+$phpkd_forum_type->save($db);
+build_forum_permissions(); 
+$db->show_errors();]]></installcode>
+			<uninstallcode><![CDATA[$db->hide_errors();
+$db->query_write("DROP TABLE IF EXISTS `" . TABLE_PREFIX . "phpkd_usernamehistory`");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` DROP `changeusernameperms`");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` DROP `canchusernameminposts`");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` DROP `canchusernameminrep`");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` DROP `canchusernameregdays`");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` DROP `canchusernamesimlperiod`");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` DROP `chusernamemovetype`");
+$db->query_write("ALTER TABLE `" . TABLE_PREFIX . "usergroup` DROP `chusernamemoveugb`");
+require_once(DIR . '/includes/class_bitfield_builder.php'); 
+$phpkd_forum_type =& vB_Bitfield_Builder::init();
+$phpkd_forum_type->save($db);
+build_forum_permissions(); 
+$db->show_errors();]]></uninstallcode>
+		</code>
+	</codes>
+	<templates>
+		<template name="phpkd_chusrn_history" templatetype="template" date="1206377076" username="PHPKD" version="1.0.0"><![CDATA[<table class="tborder" cellpadding="$stylevar[cellpadding]" cellspacing="$stylevar[cellspacing]" border="0" width="100%" align="center">
+<tr>
+	<td class="tcat" colspan="7">
+		$vbphrase[phpkd_chusrn_history]
+	</td>
+</tr>
+
+<tr>
+	<td class="thead" align="center">
+		$vbphrase[phpkd_chusrn_oldusername]
+	</td>
+	<td class="thead" align="center">
+		$vbphrase[phpkd_chusrn_newusername]
+	</td>
+	<td class="thead" align="center">
+		$vbphrase[phpkd_chusrn_action]
+	</td>
+	<td class="thead" align="center">
+		$vbphrase[phpkd_chusrn_processedby]
+	</td>
+	<td class="thead" align="center">
+		$vbphrase[phpkd_chusrn_request_dateline]
+	</td>
+	<td class="thead" align="center">
+		$vbphrase[phpkd_chusrn_action_dateline]
+	</td>
+	<td class="thead" align="center">
+		$vbphrase[phpkd_chusrn_comment]
+	</td>
+</tr>
+$phpkd_chusrn_history_bits
+</table>
+<br />]]></template>
+		<template name="phpkd_chusrn_history_bits" templatetype="template" date="1206376587" username="PHPKD" version="1.0.0"><![CDATA[<tr>
+	<td class="alt2" align="center">
+		$phpkd_chusrn_history_bit[oldusername]
+	</td>
+	<td class="alt1" align="center">
+		$phpkd_chusrn_history_bit[newusername]
+	</td>
+	<td class="alt2" align="center">
+		$phpkd_chusrn_history_bit[action]
+	</td>
+	<td class="alt1" align="center">
+		$processedby
+	</td>
+	<td class="alt2" align="center">
+		$phpkd_chusrn_history_bit[request_dateline]
+	</td>
+	<td class="alt1" align="center">
+		$phpkd_chusrn_history_bit[action_dateline]
+	</td>
+	<td class="alt2" align="center">
+		$phpkd_chusrn_history_bit[comment]
+	</td>
+</tr>
+
+]]></template>
+		<template name="phpkd_chusrn_modifyusername" templatetype="template" date="1206377378" username="PHPKD" version="1.0.0"><![CDATA[<script type="text/javascript" src="clientscript/vbulletin_md5.js?v=$vboptions[simpleversion]"></script>
+<script type="text/javascript">
+function verify_usernames(password, username1, username2)
+{
+	// do various checks, this will save people noticing mistakes on next page
+	if (password.value == '')
+	{
+		alert('$vbphrase[phpkd_chusrn_fill_out_password_field]');
+		return false;
+	}
+	else if (username1.value == '' || username2.value == '')
+	{
+		alert('$vbphrase[phpkd_chusrn_fill_out_both_username_fields]');
+		return false;
+	}
+	else if (username1.value != username2.value)
+	{
+		alert('$vbphrase[phpkd_chusrn_entered_usernames_do_not_match]');
+		return false;
+	}
+	else
+	{
+		var junk_output;
+		md5hash(document.forms.changeusername.currentpassword, document.forms.changeusername.currentpassword_md5, junk_output, $show[nopasswordempty]);
+		return true;
+	}
+	return false;
+}
+</script>
+
+<form action="profile.php?do=updateusername" name="changeusername" method="post" onsubmit="return verify_usernames(currentpassword, username, usernameconfirm);">
+<input type="hidden" name="s" value="$session[sessionhash]" />
+<input type="hidden" name="do" value="updateusername" />
+<input type="hidden" name="currentpassword_md5" />
+
+<table class="tborder" cellpadding="$stylevar[cellpadding]" cellspacing="$stylevar[cellspacing]" border="0" width="100%" align="center">
+<tr>
+	<td class="tcat">
+		$vbphrase[phpkd_chusrn_edit_username]
+	</td>
+</tr>
+
+<tr>
+	<td class="panelsurround" align="center">
+	<div class="panel">
+		<div style="width:$stylevar[formwidth_usercp]" align="$stylevar[left]">
+			<div class="fieldset">
+				<div>$vbphrase[phpkd_chusrn_enter_password_to_continue]:</div>
+				<div><input type="password" class="bginput" name="currentpassword" size="50" maxlength="50" /></div>
+			</div>
+
+			<fieldset class="fieldset">
+				<legend>$vbphrase[phpkd_chusrn_edit_username]</legend>
+				<table cellpadding="0" cellspacing="$stylevar[formspacer]" border="0">
+				<tr>
+					<td>
+						<div>$vbphrase[phpkd_chusrn_newusername]:</div>
+						<div><input type="text" class="bginput" name="username" size="50" maxlength="50" /></div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div>$vbphrase[phpkd_chusrn_confirm_new_username]:</div>
+						<div><input type="text" class="bginput" name="usernameconfirm" size="50" maxlength="50" /></div>
+					</td>
+				</tr>
+				</table>
+			</fieldset>
+			</div>
+		</div>
+
+		<div style="margin-top:$stylevar[cellpadding]px">
+			<input type="submit" class="button" value="$vbphrase[save_changes]" accesskey="s" />
+			<input type="reset" class="button" value="$vbphrase[reset_fields]" accesskey="r" />
+		</div>
+	</td>
+</tr>
+</table>
+
+</form>
+
+<if condition="$show['canviewchusernamelog']">
+<br />
+$phpkd_chusrn_history
+</if>]]></template>
+		<template name="phpkd_chusrn_usercp_nav_username" templatetype="template" date="1206459452" username="PHPKD" version="1.0.0"><![CDATA[$vbphrase[edit_email_and_password]</a></td>
+</tr>
+<tr>
+	<td class="$navclass[username]" nowrap="nowrap"><a class="smallfont" href="profile.php?$session[sessionurl]do=editusername">$vbphrase[phpkd_chusrn_edit_username]</a></td>]]></template>
+	</templates>
+	<plugins>
+		<plugin active="1" executionorder="5">
+			<title><![CDATA[Username Change Manager [Usergroup Edit Options]]]></title>
+			<hookname>admin_usergroup_edit</hookname>
+			<phpcode><![CDATA[require(DIR . '/includes/phpkd/phpkd_chusrn_plugins.php');]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title><![CDATA[Username Change Manager [Cache Templates]]]></title>
+			<hookname>cache_templates</hookname>
+			<phpcode><![CDATA[require(DIR . '/includes/phpkd/phpkd_chusrn_plugins.php');]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title><![CDATA[Username Change Manager [Initiation Start-Up]]]></title>
+			<hookname>init_startup</hookname>
+			<phpcode><![CDATA[require(DIR . '/includes/phpkd/phpkd_chusrn_plugins.php');]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title><![CDATA[Username Change Manager [Member's Profile Username Logs]]]></title>
+			<hookname>member_complete</hookname>
+			<phpcode><![CDATA[require(DIR . '/includes/phpkd/phpkd_chusrn_plugins.php');]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title><![CDATA[Username Change Manager [Username Change Page]]]></title>
+			<hookname>profile_start</hookname>
+			<phpcode><![CDATA[require(DIR . '/includes/phpkd/phpkd_chusrn_plugins.php');]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title><![CDATA[Username Change Manager [UserCP Display Link]]]></title>
+			<hookname>usercp_nav_complete</hookname>
+			<phpcode><![CDATA[require(DIR . '/includes/phpkd/phpkd_chusrn_plugins.php');]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title><![CDATA[Username Change Manager [UserCP Nav Cell Background]]]></title>
+			<hookname>usercp_nav_start</hookname>
+			<phpcode><![CDATA[require(DIR . '/includes/phpkd/phpkd_chusrn_plugins.php');]]></phpcode>
+		</plugin>
+	</plugins>
+	<phrases>
+		<phrasetype name="Control Panel Home Pages" fieldname="cphome">
+			<phrase name="phpkd_chusrn_requests" date="1206387383" username="PHPKD" version="1.0.0"><![CDATA[ØáÈÇÊ ÊÛííÑ ÇáãÚÑÝÇÊ]]></phrase>
+		</phrasetype>
+		<phrasetype name="Control Panel Options" fieldname="cpoption">
+			<phrase name="phpkd_chusrn_notifications_both" date="1206366458" username="PHPKD" version="1.0.0"><![CDATA[ãÑÇÓáÉ ÈÑíÏíÉ + ãÑÇÓáÉ ÎÇÕÉ]]></phrase>
+			<phrase name="phpkd_chusrn_notifications_emails" date="1206366462" username="PHPKD" version="1.0.0"><![CDATA[ãÑÇÓáÉ ÈÑíÏíÉ]]></phrase>
+			<phrase name="phpkd_chusrn_notifications_none" date="1206366361" username="PHPKD" version="1.0.0"><![CDATA[ÊÚØíá ÇáãÑÇÓáÇÊ]]></phrase>
+			<phrase name="phpkd_chusrn_notifications_pms" date="1206366466" username="PHPKD" version="1.0.0"><![CDATA[ãÑÇÓáÉ ÎÇÕÉ]]></phrase>
+		</phrasetype>
+		<phrasetype name="Permissions" fieldname="cppermission">
+			<phrase name="phpkd_chusrn_additional_usergroups" date="1206365615" username="PHPKD" version="1.0.0"><![CDATA[ãÌãæÚÇÊ ÇáÃÚÖÇÁ ÇáËÇäæíÉ]]></phrase>
+			<phrase name="phpkd_chusrn_autoapp" date="1206364880" username="PHPKD" version="1.0.0"><![CDATA[ÅÚÊãÇÏ ÊáÞÇÆì áØáÈÇÊ ÊÛííÑ ÇáãÚÑÝ]]></phrase>
+			<phrase name="phpkd_chusrn_canchusername" date="1206364866" username="PHPKD" version="1.0.0"><![CDATA[íÓÊØíÚ ØáÈ ÊÛííÑ ãÚÑÝå]]></phrase>
+			<phrase name="phpkd_chusrn_canviewotherusernamelog" date="1206364941" username="PHPKD" version="1.0.0"><![CDATA[íãßäå ãÔÇåÏÉ ÓÌá ÊÛííÑ ãÚÑÝÇÊ ÇáÂÎÑíä]]></phrase>
+			<phrase name="phpkd_chusrn_canviewusernamelog" date="1206364919" username="PHPKD" version="1.0.0"><![CDATA[íãßäå ãÔÇåÏÉ ÓÌá ÊÛííÑ ãÚÑÝå]]></phrase>
+			<phrase name="phpkd_chusrn_forcereactivate" date="1206365011" username="PHPKD" version="1.0.0"><![CDATA[ÅÌÈÇÑ ÇáÃÚÖÇÁ Úáì ÅÚÇÏÉ ÊÝÚíá ÚÖæíÇÊåã ÈÚÏ ÊÛííÑ ãÚÑÝÇÊåã.<dfn>ÊäÈíå: åÐå ÇáÎÇÕíÉ ÓÊÚãá 'ÝÞØ' Ýì ÍÇáÉ ÊÝÚíá ÇáÎíÇÑ "ÇáÊÍÞÞ ãä ÚäæÇä ÇáÈÑíÏ ÇáÅáßÊÑæäí ÚäÏ ÇáÊÓÌíá" ÈÅÚÏÇÏÇÊ "ÊÓÌíá ÇáÃÚÖÇÁ".</dfn>]]></phrase>
+			<phrase name="phpkd_chusrn_min_posts" date="1206365040" username="PHPKD" version="1.0.0"><![CDATA[ÇáÍÏ ÇáÃÏäì ááãÔÇÑßÇÊ ÇáãØáæÈÉ áÊÚÏíá ÇáãÚÑÝ]]></phrase>
+			<phrase name="phpkd_chusrn_min_rep" date="1206365140" username="PHPKD" version="1.0.0"><![CDATA[ÇáÍÏ ÇáÃÏäì áäÞÇØ ÇáÊÑÔíÍ ÇáãØáæÈÉ áÊÚÏíá ÇáãÚÑÝ]]></phrase>
+			<phrase name="phpkd_chusrn_move_to_desc" date="1206365708" username="PHPKD" version="1.0.0"><![CDATA[ÅÎÊÑ ãÌãæÚÉ ÇáÃÚÖÇÁ ÇáÊì ÊÑÛÈ ÈäÞá ÇáÚÖæ ÅáíåÇ Ýì ÍÇá ÞíÇãå ÈÊÛííÑ ãÚÑÝå (ÑÇÌÚ ÃíÖÇð ÇáÎíÇÑ ÇáÓÇÈÞ).]]></phrase>
+			<phrase name="phpkd_chusrn_move_to_title" date="1206365666" username="PHPKD" version="1.0.0"><![CDATA[äÞá ÇáÚÖæ áãÌãæÚÉ ÃÚÖÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_move_type_desc" date="1206365551" username="PHPKD" version="1.0.0"><![CDATA[äæÚ ÇáäÞá ÇáæÇÌÈ ÊäÝíÐå ááÚÖæ Ýì ÍÇáÉ ÊÛííÑå áãÚÑÝ. ÅÎÊÑ '<strong>ãÌãæÚÉ ÃÚÖÇÁ ÃÓÇÓíÉ</strong>' áäÞá ÇáÚÖæ ÝÚáíÇð áãÌãæÚÉ ÇáÃÚÖÇÁ ÇáÌÏíÏÉ æÊÛííÑ ãÌãæÚÊå Åáì åÐå ÇáãÌãæÚÉ¡ Ãæ ÅÎÊÑ '<strong>ãÌãæÚÉ ÃÚÖÇÁ ËÇäæíÉ</strong>' áÅÖÇÝÊå ÝÞØ áãÌãæÚÉ ÇáÃÚÖÇÁ ÇáËÇäæíÉ ÇáãÍÏÏÉ ãÚ ÊÑß ãÌãæÚÊå ÇáÃÓÇÓíÉ ßãÇ åì.<br />
+<strong>ÊäÈíå: åÐå ÇáÎÇÕíÉ áíÓ áåÇ Ãì ÊÃËíÑ Ýì ÍÇáÉ ÊÝÚíá ÎíÇÑ "ÅÌÈÇÑ ÇáÚÖæ Úáì ÅÚÇÏÉ ÊÝÚíá ÚÖæíÊå ÈÚÏ ÊÛííÑ ãÚÑÝå".</strong> 	]]></phrase>
+			<phrase name="phpkd_chusrn_move_type_title" date="1206365539" username="PHPKD" version="1.0.0"><![CDATA[äæÚ ÇáäÞá]]></phrase>
+			<phrase name="phpkd_chusrn_none" date="1206365581" username="PHPKD" version="1.0.0"><![CDATA[áÇ ÔÆ]]></phrase>
+			<phrase name="phpkd_chusrn_perms_1" date="1206364756" username="PHPKD" version="1.0.0"><![CDATA[ÕáÇÍíÇÊ ÊÛííÑ ÇáãÚÑÝ #1]]></phrase>
+			<phrase name="phpkd_chusrn_perms_2" date="1206364776" username="PHPKD" version="1.0.0"><![CDATA[ÕáÇÍíÇÊ ÊÛííÑ ÇáãÚÑÝ #2]]></phrase>
+			<phrase name="phpkd_chusrn_primary_usergroup" date="1206365607" username="PHPKD" version="1.0.0"><![CDATA[ãÌãæÚÇÊ ÇáÃÚÖÇÁ ÇáÃÓÇÓíÉ]]></phrase>
+			<phrase name="phpkd_chusrn_reg_days" date="1206365168" username="PHPKD" version="1.0.0"><![CDATA[ÇáÝÊÑÉ ÈÇáÃíÇã ÇáæÇÌÈ ÅäÞÖÇÆåÇ ÞÈá ÊÛííÑ ÇáãÚÑÝ<dfn>íÑÌì ÊÍÏíÏ ÚÏÏ ÇáÃíÇã ÇáæÇÌÈ Úáì ÇáÚÖæ ÞÖÇÆåÇ ÈÇáãäÊÏì ÞÈá Ãä íÓãÍ áå ÈÊÛííÑ ãÚÑÝå.</dfn>]]></phrase>
+			<phrase name="phpkd_chusrn_simultaneous_changes" date="1206365205" username="PHPKD" version="1.0.0"><![CDATA[ÝÊÑÉ ÇáÅäÊÙÇÑ Èíä ãÑÇÊ ÊÛííÑ ÇáãÚÑÝ<dfn>ÃÏÎá ÇáÞíãÉ '-1' ááÓãÇÍ áÊÛííÑ ÇáãÚÑÝ áÃÚÖÇÁ åÐå ÇáãÌãæÚÉ ãÊì ÃÑÇÏæÇ æÈÃì æÞÊ Ïæä ÇáÊÞíÏ ÝÊÑÉ ÇáÅäÊÙÇÑ ÇáæÇÌÈ ÅäÞÖÇÆåÇ Èíä ãÑÇÊ ÇáÊÛííÑ¡ Ãæ ÃÏÎá ÇáÞíãÉ '0' ááÓãÇÍ áÃÚÖÇÁ åÐå ÇáãÌãæÚÉ ÈÊÛííÑ ãÚÑÝÇÊåã áãÑÉ æÇÍÏÉ ÝÞØ. Ãì ÞíãÉ ÚÏÏíÉ ÕÍíÍÉ ÃÎÑì ÓíÊã ÇÍÊÓÇÈåÇ ßÝÊÑÉ íÌÈ Úáì ÇáÚÖæ Ãä íÞÖíåÇ ÞÈá Ãä íÓãÍ áå ÈÊÛííÑ ãÚÑÝå ãÑÉ ÃÎÑì (Ýì ÍÇáÉ ÊÛííÑ áãÚÑÝå ÓÇÈÞÇð).</dfn>]]></phrase>
+		</phrasetype>
+		<phrasetype name="Control Panel User Management" fieldname="cpuser">
+			<phrase name="phpkd_chusrn_headings_order_by_action" date="1206599930" username="PHPKD" version="1.0.0"><![CDATA[ÇáÅÌÑÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_action_dateline" date="1206599977" username="PHPKD" version="1.0.0"><![CDATA[ÊÇÑíÎ ÇáÅÌÑÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_action_dateline_title" date="1206600080" username="PHPKD" version="1.0.0"><![CDATA[ÊÑÊíÈ ÍÓÈ ÊÇÑíÎ ÇáÅÌÑÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_action_title" date="1206600037" username="PHPKD" version="1.0.0"><![CDATA[ÊÑÊíÈ ÍÓÈ ÇáÅÌÑÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_logid" date="1206599727" username="PHPKD" version="1.0.0"><![CDATA[ÑÞã ÇáØáÈ]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_logid_title" date="1206599769" username="PHPKD" version="1.0.0"><![CDATA[ÊÑÊíÈ ÍÓÈ ÑÞã ÇáØáÈ]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_newusername" date="1206599920" username="PHPKD" version="1.0.0"><![CDATA[ÇáãÚÑÝ ÇáÌÏíÏ]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_newusername_title" date="1206600023" username="PHPKD" version="1.0.0"><![CDATA[ÊÑÊíÈ ÍÓÈ ÇáãÚÑÝ ÇáÌÏíÏ]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_oldusername" date="1206599912" username="PHPKD" version="1.0.0"><![CDATA[ÇáãÚÑÝ ÇáÞÏíã]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_oldusername_title" date="1206600009" username="PHPKD" version="1.0.0"><![CDATA[ÊÑÊíÈ ÍÓÈ ÇáãÚÑÝ ÇáÞÏíã]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_processedby" date="1206599945" username="PHPKD" version="1.0.0"><![CDATA[ãäÝÐ ÇáÅÌÑÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_processedby_title" date="1206600051" username="PHPKD" version="1.0.0"><![CDATA[ÊÑÊíÈ ÍÓÈ ãäÝÐ ÇáÅÌÑÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_request_dateline" date="1206599963" username="PHPKD" version="1.0.0"><![CDATA[ÊÇÑíÎ ÇáØáÈ]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_request_dateline_title" date="1206600066" username="PHPKD" version="1.0.0"><![CDATA[ÊÑÊíÈ ÍÓÈ ÊÇÑíÎ ÇáØáÈ]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_userid" date="1206599898" username="PHPKD" version="1.0.0"><![CDATA[ÑÞã ÇáÚÖæíÉ]]></phrase>
+			<phrase name="phpkd_chusrn_headings_order_by_userid_title" date="1206599996" username="PHPKD" version="1.0.0"><![CDATA[ÊÑÊíÈ ÍÓÈ ÑÞã ÇáÚÖæíÉ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting" date="1206594712" username="PHPKD" version="1.0.0"><![CDATA[ÇáÝÑÒ æÇáÊÑÊíÈ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_action" date="1206594156" username="PHPKD" version="1.0.0"><![CDATA[ÇáÅÌÑÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_action_all" date="1206594259" username="PHPKD" version="1.0.0"><![CDATA[ÇáÌãíÚ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_action_auto_approved" date="1206594305" username="PHPKD" version="1.0.0"><![CDATA[Êã ÅÚÊãÇÏå ÊáÞÇÆíÇð]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_action_denied" date="1206594319" username="PHPKD" version="1.0.0"><![CDATA[Êã ÑÝÖå]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_approved" date="1206594291" username="PHPKD" version="1.0.0"><![CDATA[Êã ÅÚÊãÇÏå]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_dateline" date="1206595133" username="PHPKD" version="1.0.0"><![CDATA[ÊÇÑíÎ ÇáØáÈ ÈÚÏ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_direction" date="1206594179" username="PHPKD" version="1.0.0"><![CDATA[ÅÊÌÇå ÇáÊÑÊíÈ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_direction_asc" date="1206594774" username="PHPKD" version="1.0.0"><![CDATA[ÊÕÇÚÏì]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_direction_desc" date="1206594793" username="PHPKD" version="1.0.0"><![CDATA[ÊäÇÒáì]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_exactusername" date="1206594983" username="PHPKD" version="1.0.0"><![CDATA[ãØÇÈÞ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_orderby" date="1206594169" username="PHPKD" version="1.0.0"><![CDATA[ÊÑÊíÈ ÈæÇÓØÉ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_orderby_action" date="1206594576" username="PHPKD" version="1.0.0"><![CDATA[ÇáÅÌÑÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_orderby_action_dateline" date="1206594604" username="PHPKD" version="1.0.0"><![CDATA[ÊÇÑíÎ ÇáÅÌÑÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_orderby_id" date="1206594485" username="PHPKD" version="1.0.0"><![CDATA[ÑÞã ÇáØáÈ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_orderby_newusergroupid" date="1206594532" username="PHPKD" version="1.0.0"><![CDATA[ÇáãÌãæÚÉ ÇáÌÏíÏÉ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_orderby_newusername" date="1206594560" username="PHPKD" version="1.0.0"><![CDATA[ÇáãÚÑÝ ÇáÌÏíÏ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_orderby_oldusergroupid" date="1206594524" username="PHPKD" version="1.0.0"><![CDATA[ÇáãÌãæÚÉ ÇáÞÏíãÉ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_orderby_oldusername" date="1206594553" username="PHPKD" version="1.0.0"><![CDATA[ÇáãÚÑÝ ÇáÞÏíã]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_orderby_processedby" date="1206594624" username="PHPKD" version="1.0.0"><![CDATA[ãäÝÐ ÇáÅÌÑÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_orderby_request_dateline" date="1206594595" username="PHPKD" version="1.0.0"><![CDATA[ÊÇÑíÎ ÇáØáÈ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_orderby_userid" date="1206594501" username="PHPKD" version="1.0.0"><![CDATA[ÑÞã ÇáÚÖæíÉ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_perpage" date="1206594188" username="PHPKD" version="1.0.0"><![CDATA[Èßá ÕÝÍÉ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_usernametype" date="1206594871" username="PHPKD" version="1.0.0"><![CDATA[äæÚ ÇáãÚÑÝ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_usernametype_newusername" date="1206594914" username="PHPKD" version="1.0.0"><![CDATA[ÇáãÚÑÝ ÇáÌÏíÏ]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_usernametype_oldusername" date="1206594921" username="PHPKD" version="1.0.0"><![CDATA[ÇáãÚÑÝ ÇáÞÏíã]]></phrase>
+			<phrase name="phpkd_chusrn_log_entries_sorting_waiting" date="1206594277" username="PHPKD" version="1.0.0"><![CDATA[ÈÞÇÆãÉ ÇáÅäÊÙÇÑ]]></phrase>
+			<phrase name="phpkd_chusrn_log_viewer_page_x_y_there_are_z_total_log_entries" date="1206600253" username="PHPKD" version="1.0.0"><![CDATA[ÇÓÊÚÑÇÖ ØáÈÇÊ ÊÛííÑ ÇáãÚÑÝÇÊ (ÇáÕÝÍÉ {1}/{2}) | íæÌÏ ÅÌãÇáì {3} ØáÈ.]]></phrase>
+		</phrasetype>
+		<phrasetype name="Email Body Text" fieldname="emailbody">
+			<phrase name="phpkd_chusrn_report_forceactivate" date="1206381219" username="PHPKD" version="1.0.0"><![CDATA[ãÑÍÈÇð $username,
+
+ÞãÊ ãÄÎÑÇð ÈÊÛííÑ ãÚÑÝß¡ áåÐÇ íÊæÌÈ Úáíß ÅÚÇÏÉ ÊÝÚíá ÚÖæíÊß áÅÓÊßãÇá ÇáÎØæÇÊ æÊÍÏíË ÇáÚÖæíÉ. ÝÞØ Þã ÈÒíÇÑÉ ÇáÑÇÈØ ÃÏäÇå ãÑÉ æÇÍÏÉ æÓíÊã ÊÝÚíá ÇáÚÖæíÉ.
+
+ÑÇÈØ ÇáÊÝÚíá:
+$vboptions[bburl]/register.php?a=act&u=$userid&i=$activateid
+
+<a href="$vboptions[bburl]/register.php?a=act&u=$userid&i=$activateid">áãÓÊÎÏãì ÈÑíÏ AOL íÑÌì ÇáäÞÑ Úáì åÐÇ ÇáÑÇÈØ</a>
+
+**** åá ÇáÑÇÈØ ÃÚáÇå áÇ íÚãá¿ ****
+ÅÐÇ ßÇä ÇáÑÇÈØ ÃÚáÇå áÇ íÚãá, ÇáÑÌÇÁ ÇÓÊÎÏã ãÊÕÝÍß ááÐåÇÈ Åáì:
+$vboptions[bburl]/register.php?a=ver
+
+ÇáÑÌÇÁ ÇáÊÃßÏ ãä ÚÏã ÅÖÇÝÉ ãÓÇÝÇÊ ÅÖÇÝíÉ. ÓÊÍÊÇÌ áßÊÇÈÉ ÇÓã ÇáÚÖæ ÇáÎÇÕ Èß æÑÞã ÊÝÚíá ÍÓÇÈß Úáì ÇáÕÝÍÉ ÇáÊí ÓÊÙåÑ ÚäÏ ÇáÖÛØ Ãæ äÓÎ ÇáÑÇÈØ ÃÚáÇå Ýí ãÊÕÝÍß. 
+
+ãÚÑÝß ÇáÌÏíÏ: $username
+ÑÞã ÇáÊÝÚíá ÇáÚÖæíÉ: $activateid
+
+ÅÐÇ ÇÓÊãÑÊ ÇáãÔßáÉ ÇáÑÌÇÁ ãÑÇÓáÉ ÅÏÇÑÉ ÇáãäÊÏì ãä ÎáÇá ÇáÈÑíÏ ÇáÊÇáì:
+$vboptions[webmasteremail]
+
+ãÚ ÃØíÈ ÇáÃãäíÇÊ¡
+$vboptions[bbtitle]
+
+
+--------------------
+áÅíÞÇÝ ÊáÞí ÑÓÇÆá ÇáÊÝÚíá¡ íÑÌì ÇáäÞÑ Úáì ÇáÑÇÈØ ÇáÊÇáì::
+$vboptions[bburl]/register.php?do=deleteactivation&u=$userid&i=$activateid]]></phrase>
+			<phrase name="phpkd_chusrn_report_passactivation" date="1206381114" username="PHPKD" version="1.0.0"><![CDATA[ãÑÍÈÇð $username,
+
+ÞãÊ ãÄÎÑÇð ÈÊÛííÑ ãÚÑÝß ÈäÌÇÍ Ýì $vboptions[bbtitle]¡ áãÒíÏ ãä ÇáÊÝÇÕíá íÑÌì ÒíÇÑÉ ÇáãäÊÏì Úáì ÇáÑÇÈØ ÇáÊÇáì:
+$vboptions[bburl]
+
+Åä ßÇäÊ áÏíß Ãì ÇÓÊÝÓÇÑÇÊ Ýíãßäß ãÑÇÓáÉ ÇáÅÏÇÑÉ Úáì ÇáÚäæÇä ÇáÊÇáì:
+$vboptions[webmasteremail]
+
+ãÚ ÃØíÈ ÇáÃãäíÇÊ¡
+$vboptions[bbtitle]]]></phrase>
+			<phrase name="phpkd_chusrn_report_waitingstaff" date="1206381010" username="PHPKD" version="1.0.0"><![CDATA[ãÑÍÈÇð $username,
+
+ÞãÊ ãÄÎÑÇð ÈØáÈ ÊÛííÑ ãÚÑÝß Ýì $vboptions[bbtitle]¡ Êã ÅÑÓÇá ØáÈ ááÅÏÇÑÉ áãÑÇÌÚÊå æÇÊÎÇÐ ÇáÅÌÑÇÁ ÇáãäÇÓÈ. áãÒíÏ ãä ÇáÊÝÇÕíá íÑÌì ÒíÇÑÉ ÇáãäÊÏì Úáì ÇáÑÇÈØ ÇáÊÇáì:
+$vboptions[bburl]
+
+Åä ßÇäÊ áÏíß Ãì ÇÓÊÝÓÇÑÇÊ Ýíãßäß ãÑÇÓáÉ ÇáÅÏÇÑÉ Úáì ÇáÚäæÇä ÇáÊÇáì:
+$vboptions[webmasteremail]
+
+ãÚ ÃØíÈ ÇáÃãäíÇÊ¡
+$vboptions[bbtitle]]]></phrase>
+			<phrase name="phpkd_chusrn_request_changed" date="1206379869" username="PHPKD" version="1.0.0"><![CDATA[ãÑÍÈÇð¡
+
+ÞÇã ÇáÚÖæ $bbuserinfo[username] ÈÊÛííÑ ãÚÑÝå Ýì $vboptions[bbtitle]¡ íãßäß ãÑÇÌÚÉ ÇáÊÝÇÕíá ÈáæÍÉ ÊÍßã ÇáÅÏÇÑÉ.
+
+ÃØíÈ Çáãäì
+$vboptions[bbtitle]
+$vboptions[bburl]]]></phrase>
+			<phrase name="phpkd_chusrn_request_requested" date="1206379833" username="PHPKD" version="1.0.0"><![CDATA[ãÑÍÈÇð¡
+
+ÞÇã ÇáÚÖæ $bbuserinfo[username] ÈØáÈ ÊÛííÑ ãÚÑÝå Ýì $vboptions[bbtitle]¡ íãßäß ãÑÇÌÚÉ ÊÝÇÕíá ÇáØáÈ æÇÊÎÐÇ ÇáÅÌÑÇÁ ÇáãäÇÓÈ ãä áæÍÉ ÊÍßã ÇáÅÏÇÑÉ.
+
+ÃØíÈ Çáãäì
+$vboptions[bbtitle]
+$vboptions[bburl]
+]]></phrase>
+		</phrasetype>
+		<phrasetype name="Email Subject Text" fieldname="emailsubject">
+			<phrase name="phpkd_chusrn_report_forceactivate" date="1206381146" username="PHPKD" version="1.0.0"><![CDATA[ÅÚÇÏÉ ÊÝÚíá ÇáÚÖæíÉ áÊÃßíÏ ÊÛííÑ ÇáãÚÑÝ Ýì $vboptions[bbtitle]!]]></phrase>
+			<phrase name="phpkd_chusrn_report_passactivation" date="1206381041" username="PHPKD" version="1.0.0"><![CDATA[Êã ÊÛííÑ ãÚÑÝß ÈäÌÇÍ Ýì $vboptions[bbtitle]!]]></phrase>
+			<phrase name="phpkd_chusrn_report_waitingstaff" date="1206380896" username="PHPKD" version="1.0.0"><![CDATA[ÞãÊ ÈØáÈ ÊÛííÑ ãÚÑÝß Ýì $vboptions[bbtitle]!]]></phrase>
+			<phrase name="phpkd_chusrn_request_changed" date="1206379723" username="PHPKD" version="1.0.0"><![CDATA[$bbuserinfo[username] ÞÇã ÈÊÛííÑ ãÚÑÝ Ýì $vboptions[bbtitle]!]]></phrase>
+			<phrase name="phpkd_chusrn_request_requested" date="1206379751" username="PHPKD" version="1.0.0"><![CDATA[$bbuserinfo[username] ÞÇã ÈØáÈ ÊÛííÑ ãÚÑÝå Ýì $vboptions[bbtitle]]]></phrase>
+		</phrasetype>
+		<phrasetype name="Error Messages" fieldname="error">
+			<phrase name="canotchusername" date="1206373678" username="PHPKD" version="1.0.0"><![CDATA[ÚÝæÇð¡ áíÓ áÏíß ÇáÕáÇÍíÇÊ áÊÛííÑ ãÚÑÝß.]]></phrase>
+			<phrase name="canotchusername_posts" date="1206373692" username="PHPKD" version="1.0.0"><![CDATA[íÌÈ Ãä íßæä áÏíß {2} ãÔÇÑßÉ áÊÊãßä ãä ÊÛííÑ ãÚÑÝß¡ áÏíß ÇáÂä {1}.]]></phrase>
+			<phrase name="canotchusername_regdays" date="1206373703" username="PHPKD" version="1.0.0"><![CDATA[íÊæÌÈ Ãä Êßæä ãÓÌáÇð ÈÇáãäÊÏì ãäÐ {2} áÊÊãßä ãä ÊÛííÑ ãÚÑÝß¡ ÃäÊ ÞãÊ ÈÇáÊÓÌíá ÈÇáãäÊÏì ãäÐ {1} íæã.]]></phrase>
+			<phrase name="canotchusername_reputation" date="1206373723" username="PHPKD" version="1.0.0"><![CDATA[íÌÈ Ãä Êßæä áÏíß {2} äÞÇØ ÊÑÔíÍ áÊÊãßä ãä ÊÛííÑ ãÚÑÝß¡ áÏíß ÇáÂä {1}.]]></phrase>
+			<phrase name="canotchusername_simlperiod" date="1206373734" username="PHPKD" version="1.0.0"><![CDATA[íÊæÌÈ Úáíß ÇáÅäÊÙÇÑ {2} íæã Èíä ßá ÊÛííÑíä ááãÚÑÝ¡ áÞÏ ÇäÊÙÑÊ {1} ãäÐ ÂÎÑ ÊÛííÑ áãÚÑÝß.]]></phrase>
+			<phrase name="phpkd_chusrn_no_log_entries_matched_your_query" date="1206595220" username="PHPKD" version="1.0.0"><![CDATA[áÇ íæÌÏ ÓÌáÇÊ ãØÇÈÞÉ áÈÍËß.]]></phrase>
+			<phrase name="usernamemismatch" date="1206373813" username="PHPKD" version="1.0.0"><![CDATA[ßáÇ ÇáãÚÑÝíä ÇáãÏÎáíä ÛíÑ ãÊØÇÈÞíä.]]></phrase>
+			<phrase name="usernameotherpreviousrequested" date="1206606945" username="PHPKD" version="1.0.0"><![CDATA[åÐÇ ÇáãÚÑÝ ÞÇã ÈØáÈå ÚÖæ ÂÎÑ ÈÇáãäÊÏì¡ æãÇ íÒÇá ÈÞÇÆãÉ ÇáÅäÊÙÇÑ. áÐÇ áÇ íãßäß ØáÈå áÍíä ÅÊÎÇÐ ÇáÅÏÇÑÉ ááÅÌÑÇÁ ÇáãäÇÓÈ ÍíÇáå.]]></phrase>
+			<phrase name="usernameownpreviousrequested" date="1206607165" username="PHPKD" version="1.0.0"><![CDATA[áÞÏ ÞãÊ ÓÇÈÞÇð ÈØáÈ ÊÛííÑ ãÚÑÝß¡ æåÐÇ ÇáØáÈ ãÇ íÒÇá ÈÞÇÆãÉ ÇáÅäÊÙÇÑ. áÐÇ áÇ íãßäß ÊäÝíÐ ÃßËÑ ãä ØáÈ áÍíä ÅÊÎÇÐ ÇáÅÏÇÑÉ ÇáÅÌÑÇÁ ÇáãäÇÓÈ ÍíÇá ØáÈß ÇáÓÇÈÞ.]]></phrase>
+			<phrase name="usernamepreviousdenied" date="1206373843" username="PHPKD" version="1.0.0"><![CDATA[ÇáãÚÑÝ ÇáãØáæÈ Êã ÑÝÖå ÓÇÈÞÇð ãä ÞÈá ÇáÅÏÇÑÉ¡ áÐáß áÇ íãßäß ØáÈå.]]></phrase>
+			<phrase name="usernamepreviousused" date="1206373860" username="PHPKD" version="1.0.0"><![CDATA[åÐÇ ÇáãÚÑÝ ÞÇã ÈÅÓÊÎÏÇãå ÃÍÏ ÇáÃÚÖÇÁ ÓÇÈÞÇð¡ æÇáÅÏÇÑÉ áÇ ÊÓãÍ ÈÅÓÊÎÏÇã ÇáãÚÑÝÇÊ ÇáãÓÊÎÏãÉ ÞÏíãÇð.]]></phrase>
+			<phrase name="usingsameusername" date="1206373895" username="PHPKD" version="1.0.0"><![CDATA[ÃäÊ ÊÓÊÎÏã åÐÇ ÇáãÚÑÝ ÍÇáíÇð¡ íÑÌì ÅÎÊíÇÑ ãÚÑÝ ÂÎÑ.]]></phrase>
+		</phrasetype>
+		<phrasetype name="Front-End Redirect Messages" fieldname="frontredirect">
+			<phrase name="updateusernamethanks_passactivation" date="1206374100" username="PHPKD" version="1.0.0"><![CDATA[ÔßÑÇð $bbuserinfo[username] áÊÍÏíËß ãáÝß ÇáÔÎÕì. áÞÏ ÞãÊ ÈÊÛííÑ ãÚÑÝß ÈäÌÇÍ.]]></phrase>
+			<phrase name="updateusernamethanks_waitingstaff" date="1206374081" username="PHPKD" version="1.0.0"><![CDATA[ÔßÑÇð $bbuserinfo[username] áÊÍÏíËß ãáÝß ÇáÔÎÕì. ØáÈ ÊÛííÑ ãÚÑÝß Êã ÅÑÓÇáå ááÅÏÇÑÉ áãÑÇÌÚÊå æÅÊÎÇÐ ÇáÅÌÑÇÁ ÇáãäÇÓÈ ÍíÇáå.]]></phrase>
+		</phrasetype>
+		<phrasetype name="GLOBAL" fieldname="global">
+			<phrase name="phpkd_chusrn_acp_report_notification_denied_body" date="1206387020" username="PHPKD" version="1.0.0"><![CDATA[ãÑÍÈÇð {oldusername}¡
+
+
+ØáÈ ÊÛííÑ ãÚÑÝß Êã ÑÝÖå.
+
+ÇáÊÝÇÕíá:
+ãÚÑÝß ÇáÃÕáì: {oldusername}
+ÇáãÚÑÝ ÇáãØáæÈ: {newusername}
+ÊÇÑíÎ ÇáÅÌÑÇÁ: {date}
+{comment}
+
+Åä ßÇäÊ áÏíß Ãì ÇÓÊÝÓÇÑÇÊ Ýíãßäß ãÑÇÓáÉ ÇáÅÏÇÑÉ ãä ÎáÇá [URL="{contactuslink}"]äãæÐÌ ÇáãÑÇÓáÉ[/URL].
+
+
+ãÚ ÃØíÈ ÇáÃãäíÇÊ¡
+[URL="{bburl}"]{bbtitle}[/URL]]]></phrase>
+			<phrase name="phpkd_chusrn_acp_report_notification_denied_subject" date="1206386958" username="PHPKD" version="1.0.0"><![CDATA[ØáÈ ÊÛííÑ ãÚÑÝß Êã ÑÝÖå!]]></phrase>
+			<phrase name="phpkd_chusrn_acp_report_notification_passactivation_body" date="1206386865" username="PHPKD" version="1.0.0"><![CDATA[ãÑÍÈÇð {oldusername}¡
+
+
+ØáÈ ÊÛííÑ ãÚÑÝß Êã ÅÚÊãÇÏå ÈäÌÇÍ.
+
+ÇáÊÝÇÕíá:
+ãÚÑÝß ÇáÃÕáì: {oldusername}
+ÇáãÚÑÝ ÇáÌÏíÏ: {newusername}
+ÊÇÑíÎ ÇáÅÌÑÇÁ: {date}
+{comment}
+
+Åä ßÇäÊ áÏíß Ãì ÇÓÊÝÓÇÑÇÊ Ýíãßäß ãÑÇÓáÉ ÇáÅÏÇÑÉ ãä ÎáÇá [URL="{contactuslink}"]äãæÐÌ ÇáãÑÇÓáÉ[/URL].
+
+
+ãÚ ÃØíÈ ÇáÃãäíÇÊ¡
+[URL="{bburl}"]{bbtitle}[/URL]]]></phrase>
+			<phrase name="phpkd_chusrn_acp_report_notification_passactivation_subject" date="1206386775" username="PHPKD" version="1.0.0"><![CDATA[ØáÈ ÊÛííÑ ãÚÑÝß Êã ÅÚÊãÇÏå ÈäÌÇÍ!]]></phrase>
+			<phrase name="phpkd_chusrn_report_notification_forceactivate_body" date="1206385854" username="PHPKD" version="1.0.0"><![CDATA[ãÑÍÈÇð {oldusername}¡
+
+
+áÞÏ ÞãÊ ÈÊÛííÑ ãÚÑÝß ÈäÌÇÍ æÇáÍãÏ ááå.
+
+ÇáÊÝÇÕíá:
+ãÚÑÝß ÇáÃÕáì: {oldusername}
+ÇáãÚÑÝ ÇáÌÏíÏ: {newusername}
+ÊÇÑíÎ ÇáÅÌÑÇÁ: {date}
+{comment}
+
+íÑÌì ÇáÅäÊÈÇå - ÊÈÞÊ ÎØæÉ ÃÎíÑÉ áÅÓÊßãÇá ÇáÊÛííÑ¡ ÇáÎØæÉ ÇáÃÎíÑÉ åì ÅÚÇÏÉ ÊÝÚíá ÚÖæíÊß ãÌÏÏÇð Úä ØÑíÞ ÇáÑÇÈØ ÇáãÑÓá Åáì ÈÑíÏ ÇáÅáßÊÑæäì ÇáãÑÓá Åáì ÈÑíÏ ÇáãÓÌá áÏíäÇ¡ ÝÞØ Þã ÈÇáäÞÑ Úáì åÐÇ ÇáÑÇÈØ ãÑÉ æÇÍÏÉ æÓíÊã ÊÝÚíá ÇáÚÖæíÉ.
+Åä ßÇäÊ áÏíß Ãì ÇÓÊÝÓÇÑÇÊ Ýíãßäß ãÑÇÓáÉ ÇáÅÏÇÑÉ ãä ÎáÇá [URL="{contactuslink}"]äãæÐÌ ÇáãÑÇÓáÉ[/URL].
+
+
+ãÚ ÃØíÈ ÇáÃãäíÇÊ¡
+[URL="{bburl}"]{bbtitle}[/URL]]]></phrase>
+			<phrase name="phpkd_chusrn_report_notification_forceactivate_subject" date="1206385861" username="PHPKD" version="1.0.0"><![CDATA[áÞÏ ÞãÊ ÈÊÛííÑ ãÚÑÝß ÈäÌÇÍ æÇáÍãÏ ááå!]]></phrase>
+			<phrase name="phpkd_chusrn_report_notification_passactivation_body" date="1206385866" username="PHPKD" version="1.0.0"><![CDATA[ãÑÍÈÇð {oldusername}¡
+
+
+áÞÏ ÞãÊ ÈÊÛííÑ ãÚÑÝß ÈäÌÇÍ æÇáÍãÏ ááå.
+
+ÇáÊÝÇÕíá:
+ãÚÑÝß ÇáÃÕáì: {oldusername}
+ÇáãÚÑÝ ÇáÌÏíÏ: {newusername}
+ÊÇÑíÎ ÇáÅÌÑÇÁ: {date}
+{comment}
+
+Åä ßÇäÊ áÏíß Ãì ÇÓÊÝÓÇÑÇÊ Ýíãßäß ãÑÇÓáÉ ÇáÅÏÇÑÉ ãä ÎáÇá [URL="{contactuslink}"]äãæÐÌ ÇáãÑÇÓáÉ[/URL].
+
+
+ãÚ ÃØíÈ ÇáÃãäíÇÊ¡
+[URL="{bburl}"]{bbtitle}[/URL]]]></phrase>
+			<phrase name="phpkd_chusrn_report_notification_passactivation_subject" date="1206386756" username="PHPKD" version="1.0.0"><![CDATA[áÞÏ ÞãÊ ÈÊÛííÑ ãÚÑÝß ÈäÌÇÍ æÇáÍãÏ ááå!]]></phrase>
+			<phrase name="phpkd_chusrn_report_notification_waitingstaff_body" date="1206385880" username="PHPKD" version="1.0.0"><![CDATA[ãÑÍÈÇð {oldusername}¡
+
+
+ØáÈ ÊÛííÑ ãÚÑÝß Êã ÅÑÓÇáå ááÅÏÇÑÉ áãÑÇÌÚÊå æÅÊÎÇÐ ÇáÅÌÑÇÁ ÇáãäÇÓÈ ÍíÇáå.
+
+ÇáÊÝÇÕíá:
+ãÚÑÝß ÇáÍÇáì: {oldusername}
+ÇáãÚÑÝ ÇáãØáæÈ: {newusername}
+ÊÇÑíÎ ÇáØáÈ: {date}
+{comment}
+
+Åä ßÇäÊ áÏíß Ãì ÇÓÊÝÓÇÑÇÊ Ýíãßäß ãÑÇÓáÉ ÇáÅÏÇÑÉ ãä ÎáÇá [URL="{contactuslink}"]äãæÐÌ ÇáãÑÇÓáÉ[/URL].
+
+
+ãÚ ÃØíÈ ÇáÃãäíÇÊ¡
+[URL="{bburl}"]{bbtitle}[/URL]]]></phrase>
+			<phrase name="phpkd_chusrn_report_notification_waitingstaff_subject" date="1206385886" username="PHPKD" version="1.0.0"><![CDATA[ØáÈ ÊÛííÑ ãÚÑÝß Êã ÅÑÓÇáå ááÅÏÇÑÉ!]]></phrase>
+			<phrase name="phpkd_chusrn_request_notification_action_changed" date="1206378917" username="PHPKD" version="1.0.0"><![CDATA[ÞÇã ÈÊÛííÑ ãÚÑÝå Åáì]]></phrase>
+			<phrase name="phpkd_chusrn_request_notification_action_requested" date="1206378979" username="PHPKD" version="1.0.0"><![CDATA[ØáÈ ÊÛííÑ ãÚÑÝå Åáì]]></phrase>
+			<phrase name="phpkd_chusrn_request_notification_body" date="1206379438" username="PHPKD" version="1.0.0"><![CDATA[ãÑÍÈÇð¡
+
+
+{oldusername} ÞÇã {action} {newusername}¡ ÇáÊÝÇÕíá:
+ÇáãÚÑÝ ÇáÃÕáì: {oldusername}
+ÇáãÚÑÝ ÇáãØáæÈ: {newusername}
+ÊÇÑíÎ ÇáØáÈ: {date}
+ÇáãáÝ ÇáÔÎÕì ááÚÖæ: [URL="{profile}"]åäÜÜÜÇ[/URL]
+{comment}
+
+íãßäß ãÑÇÌÚÉ ÊÇÕíá ÇáØáÈ æÅÊÎÇÐ ÇáÅÌÑÇÁ ÇáãäÇÓÈ ãä ÎáÇá áæÍÉ ÊÍßã ÇáÅÏÇÑÉ.
+
+
+ãÚ ÃØíÈ ÇáÃãäíÇÊ¡
+[URL="{bburl}"]{bbtitle}[/URL] 	]]></phrase>
+			<phrase name="phpkd_chusrn_request_notification_subject" date="1206378841" username="PHPKD" version="1.0.0"><![CDATA["{oldusername}" ÞÇã {action} "{newusername}"!]]></phrase>
+			<phrase name="phpkd_chusrn_subaction_denied" date="1206386646" username="PHPKD" version="1.0.0"><![CDATA[Êã ÑÝÖ ØáÈ ÊÛííÑ ãÚÑÝß!]]></phrase>
+			<phrase name="phpkd_chusrn_subaction_forceactivate" date="1206379501" username="PHPKD" version="1.0.0"><![CDATA[íÊæÌÈ ÅÚÇÏÉ ÊÝÚíá ÇáÚÖæíÉ.]]></phrase>
+			<phrase name="phpkd_chusrn_subaction_nots" date="1206608263" username="PHPKD" version="1.0.0"><![CDATA[ãáÇÍÙÇÊ: ]]></phrase>
+			<phrase name="phpkd_chusrn_subaction_passactivation" date="1206379535" username="PHPKD" version="1.0.0"><![CDATA[ÇáÚÖæíÉ ãÝÚáÉ æáÇ ÊÍÊÇÌ áÅÚÇÏÉ ÊÝÚíá.]]></phrase>
+			<phrase name="phpkd_chusrn_subaction_waitingstaff" date="1206379561" username="PHPKD" version="1.0.0"><![CDATA[ØáÈ ÊÛííÑ ÇáãÚÑÝ ÈÞÇÆãÉ ÇáÅäÊÙÇÑ.]]></phrase>
+		</phrasetype>
+		<phrasetype name="User Tools (global)" fieldname="user">
+			<phrase name="phpkd_chusrn_action" date="1206377125" username="PHPKD" version="1.0.0"><![CDATA[ÇáÅÌÑÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_action_approved" date="1206372637" username="PHPKD" version="1.0.0"><![CDATA[<span style="color: #008000">Êã ÅÚÊãÇÏå</span>]]></phrase>
+			<phrase name="phpkd_chusrn_action_auto_approved" date="1206372648" username="PHPKD" version="1.0.0"><![CDATA[<span style="color: #008000">Êã ÅÚÊãÇÏå ÊáÞÇÆíÇð</span>]]></phrase>
+			<phrase name="phpkd_chusrn_action_dateline" date="1206377163" username="PHPKD" version="1.0.0"><![CDATA[ÊÇÑíÎ ÇáÅÌÑÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_action_denied" date="1206372670" username="PHPKD" version="1.0.0"><![CDATA[<span style="color: #FF0000">Êã ÑÝÖå</span>]]></phrase>
+			<phrase name="phpkd_chusrn_action_waiting" date="1206372607" username="PHPKD" version="1.0.0"><![CDATA[<span style="color: #000000">ÈÞÇÆãÉ ÇáÅäÊÙÇÑ</span>]]></phrase>
+			<phrase name="phpkd_chusrn_comment" date="1206377170" username="PHPKD" version="1.0.0"><![CDATA[ÇáÊÚáíÞ]]></phrase>
+			<phrase name="phpkd_chusrn_confirm_new_username" date="1206377508" username="PHPKD" version="1.0.0"><![CDATA[ÊÃßíÏ ÇáãÚÑÝ ÇáÌÏíÏ]]></phrase>
+			<phrase name="phpkd_chusrn_edit_username" date="1206376842" username="PHPKD" version="1.0.0"><![CDATA[ÊÛííÑ ÇáãÚÑÝ]]></phrase>
+			<phrase name="phpkd_chusrn_enter_password_to_continue" date="1206377409" username="PHPKD" version="1.0.0"><![CDATA[íÑÌì ÅÏÎÇá ßáãÉ ÇáãÑæÑ ÇáÍÇáíÉ ááÅÓÊãÑÇÑ]]></phrase>
+			<phrase name="phpkd_chusrn_entered_usernames_do_not_match" date="1206377480" username="PHPKD" version="1.0.0"><![CDATA[ÇáãÚÑÝÇÊ ÇáÌÏíÏÉ ÛíÑ ãÊØÇÈÞÉ!]]></phrase>
+			<phrase name="phpkd_chusrn_fill_out_both_username_fields" date="1206377459" username="PHPKD" version="1.0.0"><![CDATA[íÑÌì ãáÆ ÍÞáì ÇáãÚÑÝ ÇáÌÏíÏ æÊÃßíÏå!]]></phrase>
+			<phrase name="phpkd_chusrn_fill_out_password_field" date="1206377438" username="PHPKD" version="1.0.0"><![CDATA[íÑÌì ãáÆ ÍÞá ßáãÉ ÇáãÑæÑ!]]></phrase>
+			<phrase name="phpkd_chusrn_history" date="1206377246" username="PHPKD" version="1.0.0"><![CDATA[ÓÌá ÊÛííÑ ÇáãÚÑÝ]]></phrase>
+			<phrase name="phpkd_chusrn_newusername" date="1206377108" username="PHPKD" version="1.0.0"><![CDATA[ÇáãÚÑÝ ÇáÌÏíÏ]]></phrase>
+			<phrase name="phpkd_chusrn_oldusername" date="1206377097" username="PHPKD" version="1.0.0"><![CDATA[ÇáãÚÑÝ ÇáÞÏíã]]></phrase>
+			<phrase name="phpkd_chusrn_processed_by_bit" date="1206373446" username="PHPKD" version="1.0.0"><![CDATA[<a href="{1}/member.php?u={2}">{3}</a>]]></phrase>
+			<phrase name="phpkd_chusrn_processedby" date="1206377138" username="PHPKD" version="1.0.0"><![CDATA[ãäÝÐ ÇáÅÌÑÇÁ]]></phrase>
+			<phrase name="phpkd_chusrn_request_dateline" date="1206377151" username="PHPKD" version="1.0.0"><![CDATA[ÊÇÑíÎ ÇáØáÈ]]></phrase>
+		</phrasetype>
+		<phrasetype name="vBulletin Settings" fieldname="vbsettings">
+			<phrase name="setting_phpkd_chusrn_active_desc" date="1206365938" username="PHPKD" version="1.0.0"><![CDATA[ÅÎÊÑ "äÚã" áÊÝÚíá äÙÇã ÊÛííÑ ÇáãÚÑÝÇÊ ááÓãÇÍ ááÃÚÖÇÁ ÈÊÛííÑ ãÚÑÝÇÊåã (ÍÓÈ ÕáÇÍíÇÊ ãÌãæÚÇÊåã)¡ Ãæ ÅÎÊÑ "áÇ" áÊÚØíá ÇáäÙÇã ßáíÇð.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_active_title" date="1206365938" username="PHPKD" version="1.0.0"><![CDATA[ÊÝÚíá äÙÇã ÊÛííÑ ÇáãÚÑÝÇÊ]]></phrase>
+			<phrase name="setting_phpkd_chusrn_allow_denied_to_others_desc" date="1206365989" username="PHPKD" version="1.0.0"><![CDATA[ÊÝÚíá åÐÇ ÇáÎíÇÑ ÓíÓãÍ ááÃÚÖÇÁ ÈØáÈ ÊÛííÑ ãÚÑÝÇÊåã áãÚÑÝÇÊ Êã ÑÝÖåÇ ÓÇÈÞÇð ãä ÞÈá ÇáÅÏÇÑÉ¡ ÊÚØíá ÇáÎíÇÑ ÓíãäÚ ÇáÃÚÖÇÁ ãä ÅãßÇäíÉ ØáÈ ÊÛííÑ ãÚÑÝÇÊåã áãÚÑÝÇÊ Êã ÑÝÖåÇ ÓÇÈÞÇð.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_allow_denied_to_others_title" date="1206365989" username="PHPKD" version="1.0.0"><![CDATA[ÇáÓãÇÍ ÈÇáãÚÑÝÇÊ ÇáãÑÝæÖÉ ááÂÎÑíä]]></phrase>
+			<phrase name="setting_phpkd_chusrn_allow_old_usernames_desc" date="1206366016" username="PHPKD" version="1.0.0"><![CDATA[ÊÝÚíá åÐÇ ÇáÎíÇÑ ÓíÓãÍ ááÃÚÖÇÁ ÈØáÈ ÊÛííÑ ãÚÑÝÇÊåã áãÚÑÝÇÊ ÞÏíãÉ Êã ÇÓÊÎÏÇãåÇ ÓÇÈÞÇð ãä ÞÈá ÃÚÖÇÁ ÂÎÑíä æÞÇãæÇ áÇÍÞÇð ÈÊÛííÑåÇ¡ ÊÚØíá åÐÇ ÇáÎíÇÑ ÓíãäÚ ÇáÃÚÖÇÁ ãä ØáÈ ÊÛííÑ ãÚÑÝÇÊåã áãÚÑÝÇÊ ÞÏíãÉ Êã ÇÓÊÎÏÇãåÇ ÓÇÈÞÇð.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_allow_old_usernames_title" date="1206366016" username="PHPKD" version="1.0.0"><![CDATA[ÇáÓãÇÍ ÈØáÈ ÇáãÚÑÝÇÊ ÇáÞÏíãÉ ááÂÎÑíä]]></phrase>
+			<phrase name="setting_phpkd_chusrn_allow_own_old_usernames_desc" date="1206366061" username="PHPKD" version="1.0.0"><![CDATA[ÊÝÚíá åÐÇ ÇáÎíÇÑ ÓíÓãÍ ááÃÚÖÇÁ ÈØáÈ ÊÛííÑ ãÚÑÝÇÊåã áãÚÑÝÇÊ ÞÏíãÉ ÞÇãæÇ åã "åã ÝÞØ" ÈÇÓÊÎÏÇãåÇ ÓÇÈÞÇð¡ ÊÚØíá åÐÇ ÇáÎíÇÑ ÓíãäÚ ÇáÃÚÖÇÁ ãä ØáÈ ÊÛííÑ ãÚÑÝÇÊåã áãÚÑÝÇÊåã ÇáÞÏíãÉ ÇáÊì ÇÓÊÎÏãæåÇ ÓÇÈÞÇð.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_allow_own_old_usernames_title" date="1206366061" username="PHPKD" version="1.0.0"><![CDATA[ÇáÓãÇÍ ÈØáÈ ÇáãÚÑÝÇÊ ÇáÞÏíãÉ ááÚÖæ]]></phrase>
+			<phrase name="setting_phpkd_chusrn_auto_prune_desc" date="1206366084" username="PHPKD" version="1.0.0"><![CDATA[íãßäß ãä ÎáÇá åÐÇ ÇáÎíÇÑ ÊÍÏíÏ ÝÊÑÉ ÈÞÇÁ ÓÌáÇÊ ÊÛííÑ ãÚÑÝÇÊ ÇáÃÚÖÇÁ¡ ÈÚÏ Êáß ÇáÝÊÑÉ ÓíÊã ÍÐÝ ÇáÓÌáÇÊ ÊáÞÇÆíÇð ãä ÞÇÚÏÉ ÇáÈíÇäÇÊ. <br /><strong>ÊäÈíå åÇã: íÑÌì ÇáÅäÊÈÇå Åáì Ãä ÇáÎæÇÕ ÇáÊÇáíÉ "ÇáÓãÇÍ ÈÇáãÚÑÝÇÊ ÇáãÑÝæÖÉ ááÂÎÑíä" æ "ÇáÓãÇÍ ÈØáÈ ÇáãÚÑÝÇÊ ÇáÞÏíãÉ ááÂÎÑíä" æ "ÇáÓãÇÍ ÈØáÈ ÇáãÚÑÝÇÊ ÇáÞÏíãÉ ááÚÖæ" ÊÚÊãÏ Úáì åÐå ÇáÓÌáÇÊ¡ áÐáß Ýì ÍÇáÉ ÊÝÚíá åÐÇ ÇáÎíÇÑ æÍÐÝ Êáß ÇáÓÌáÇÊ ÝÓÊÚãá åÐå ÇáÎæÇÕ æÝÞÇð áãÇ ÊÈÞì ãä ÓÌáÇÊ Ýì ÞÇÚÏÉ ÇáÈíÇäÇÊ ÝÞØ. ääÕÍ ÈÊÍÑì ÇáÏÞÉ æÇáÊÝßíÑ ãáíÇð ÞÈá ÊÝÚíá åÐÇ ÇáÎíÇÑ Ýì ÍÇáÉ ÇáÑÛÈÉ Ýì ÇáÅÓÊÝÇÏÉ ãä ÇáÎæÇÕ ÇáãÐßæÑÉ.</strong>]]></phrase>
+			<phrase name="setting_phpkd_chusrn_auto_prune_title" date="1206366084" username="PHPKD" version="1.0.0"><![CDATA[ÝÊÑÉ ÈÞÇÁ ÓÌáÇÊ ÊÛííÑ ÇáãÚÑÝÇÊ]]></phrase>
+			<phrase name="setting_phpkd_chusrn_pm_disablesmilies_desc" date="1206366918" username="PHPKD" version="1.0.0"><![CDATA[ÅÎÊÑ "äÚã" áÊÚØíá ÇáÅÈÊÓÇãÇÊ ÈÑÓÇÆá ÇáÊäÈíå¡ Ãæ "áÇ" áÊÝÚíáåÇ -Ýì ÍÇá æÌÏÊ-.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_pm_disablesmilies_title" date="1206366918" username="PHPKD" version="1.0.0"><![CDATA[ÊÚØíá ÇáÅÈÊÓÇãÇÊ Ýì ÑÓÇÆá ÇáÊäÈíå¿]]></phrase>
+			<phrase name="setting_phpkd_chusrn_pm_iconid_desc" date="1206366822" username="PHPKD" version="1.0.0"><![CDATA[Þã ÈÊÍÏíÏ ÑÞã ÃíÞæäÉ ÑÓÇÆá ÇáÊäÈíå (ÇáÎÇÕÉ)¡ ÇÊÑß ÇáÎíÇÑ ÝÇÑÛ Ãæ ÖÚ ÇáÞíãÉ '0' áÊÌÇåá åÐÇ ÇáÎíÇÑ.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_pm_iconid_title" date="1206366822" username="PHPKD" version="1.0.0"><![CDATA[ÑÞã ÇáÃíÞæäÉ ÇáÅÝÊÑÇÖíÉ áÑÓÇÆá ÇáÊäÈíå]]></phrase>
+			<phrase name="setting_phpkd_chusrn_pm_overridequota_desc" date="1206367080" username="PHPKD" version="1.0.0"><![CDATA[ÅÎÊÑ äÚã áÊÌÇæÒ äÓÈÉ ÇáÅÓÊåáÇß áÓÚÉ ÇáÊÎÒíä ÈÕäÏæÞ ÇáÑÓÇÆá ÇáÎÇÕÉ ÃËäÇÁ ÅÑÓÇá ÑÓÇÆá ÇáÊäÈíå¡ Ãæ "áÇ" ááÊÚØíá.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_pm_overridequota_title" date="1206367080" username="PHPKD" version="1.0.0"><![CDATA[ÊÌÇæÒ ÓÚÉ ÇáÊÎÒíä]]></phrase>
+			<phrase name="setting_phpkd_chusrn_pm_receipt_desc" date="1206367049" username="PHPKD" version="1.0.0"><![CDATA[ÅÎÊÑ "äÚã" áÊÝÚíá ÎÇÕíÉ "ØáÈ ÅÚáÇã ÈÇáÞÑÇÁÉ" áÑÓÇÆá ÇáÊäÈíå (ÇáÎÇÕÉ)¡ Ãæ "áÇ" ááÊÚØíá.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_pm_receipt_title" date="1206367049" username="PHPKD" version="1.0.0"><![CDATA[ØáÈ ÅÚáÇã ÈÇáÞÑÇÁÉ áÑÓÇÆá ÇáÊäÈíå]]></phrase>
+			<phrase name="setting_phpkd_chusrn_pm_savecopy_desc" date="1206366761" username="PHPKD" version="1.0.0"><![CDATA[ÅÎÊÑ "äÚã" áÍÝÙ äÓÎÉ ãä ÑÓÇÆá ÇáÊäÈíå (ÇáÎÇÕÉ) ÈÕäÏæÞ ÇáÑÇÓá¡ Ãæ "áÇ" ááÊÚØíá.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_pm_savecopy_title" date="1206366761" username="PHPKD" version="1.0.0"><![CDATA[ÍÝÙ äÓÎÉ ãä ÑÓÇÆá ÇáÊäÈíå áÏì ÇáÑÇÓá]]></phrase>
+			<phrase name="setting_phpkd_chusrn_pm_signature_desc" date="1206366883" username="PHPKD" version="1.0.0"><![CDATA[ÅÎÊÑ "äÚã" áÚÑÖ ÊæÞíÚ ÇáÑÇÓá ÈÑÓÇÆá ÇáÊäÈíå (ÇáÎÇÕÉ)¡ Ãæ "áÇ" ááÊÚØíá.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_pm_signature_title" date="1206366883" username="PHPKD" version="1.0.0"><![CDATA[ÚÑÖ ÇáÊæÞíÚ ÈÑÓÇÆá ÇáÊäÈíå]]></phrase>
+			<phrase name="setting_phpkd_chusrn_report_notification_sender_desc" date="1206366678" username="PHPKD" version="1.0.0"><![CDATA[ÃÏÎá ÇÓã ÇáÅÏÇÑì ÇáÑÇÓá áÑÓÇÆá ÊäÈíå ÇáÃÚÖÇÁ ÈÊÝÇÕíá ØáÈÇÊ ÊÛííÑ ãÚÑÝÇÊåã¡ ÊÍÑì ÇáÏÞÉ Ýì ÇáÇÓã ÇáãÏÎá.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_report_notification_sender_title" date="1206366678" username="PHPKD" version="1.0.0"><![CDATA[ÑÇÓá ÑÓÇÆá ÇáÊäÈíå ááÃÚÖÇÁ]]></phrase>
+			<phrase name="setting_phpkd_chusrn_request_notification_sender_desc" date="1206366647" username="PHPKD" version="1.0.0"><![CDATA[ÃÏÎá ÇÓã ÇáÅÏÇÑì ÇáÑÇÓá áÑÓÇÆá ÊäÈíå ÇáÅÏÇÑÉ ÈØáÈÇÊ ÊÛííÑ ÇáãÚÑÝÇÊ¡ ÊÍÑì ÇáÏÞÉ ÈÇáÇÓã ÇáãÏÎá.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_request_notification_sender_title" date="1206366647" username="PHPKD" version="1.0.0"><![CDATA[ÑÇÓá ÑÓÇÆá ÇáÊäÈíå ááÅÏÇÑÉ]]></phrase>
+			<phrase name="setting_phpkd_chusrn_staff_notifications_desc" date="1206366430" username="PHPKD" version="1.0.0"><![CDATA[ÅÎÊÑ äæÚ ÇáÊäÈíå ÇáÅÏÇÑì ÇáãÑÛæÈ áÅÓÊÎÏÇãå áãÑÇÓáÉ ÇáÅÏÇÑííä ÈØáÈÇÊ ÊÛííÑ ÇáãÚÑÝÇÊ.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_staff_notifications_title" date="1206366430" username="PHPKD" version="1.0.0"><![CDATA[äæÚ ÇáÊäÈíå ÇáÅÏÇÑì]]></phrase>
+			<phrase name="setting_phpkd_chusrn_staff_recipients_desc" date="1206366724" username="PHPKD" version="1.0.0"><![CDATA[ÃÏÎá ÃÓãÇÁ ÇáÅÏÇÑííä ÇáãÓÄæáíä Úä ØáÈÇÊ ÊÛííÑ ÇáãÚÑÝÇÊ ÈåÐÇ ÇáÍÞá¡ ÊÍÑì ÇáÏÞÉ Ýì ÇáÃÓãÇÁ ÇáãÏÎáÉ. íãßäß ÅÏÎÇá ÃßËÑ ãä ÇÓã Úáì Ãä Êßæä ÇáÝÇÕáÉ Èíä ßá ÇÓã æÂÎÑ åì ÇáÝÇÕáÉ ÇáãäÞæØÉ ';'.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_staff_recipients_title" date="1206366724" username="PHPKD" version="1.0.0"><![CDATA[ÇáÅÏÇÑííä ÇáãÓÄæáíä Úä ØáÈÇÊ ÊÛííÑ ÇáãÚÑÝÇÊ]]></phrase>
+			<phrase name="setting_phpkd_chusrn_users_notifications_desc" date="1206366422" username="PHPKD" version="1.0.0"><![CDATA[ÅÎÊÑ äæÚ ÑÓÇÆá ÊäÈíå ÇáÃÚÖÇÁ ÇáãÑÛæÈ ÇÓÊÎÏÇãå áãÑÇÓáÉ ÇáÃÚÖÇÁ ÈÊÝÇÕíá ØáÈÇÊ ÊÛííÑ ÇáãÚÑÝÇÊ.]]></phrase>
+			<phrase name="setting_phpkd_chusrn_users_notifications_title" date="1206366422" username="PHPKD" version="1.0.0"><![CDATA[äæÚ ÊäÈíå ÇáÃÚÖÇÁ]]></phrase>
+			<phrase name="settinggroup_phpkd_chusrn" date="1206365879" username="PHPKD" version="1.0.0"><![CDATA[äÙÇã ÊÛííÑ ãÚÑÝÇÊ ÇáÃÚÖÇÁ]]></phrase>
+		</phrasetype>
+	</phrases>
+	<options>
+		<settinggroup name="phpkd_chusrn" displayorder="580">
+			<setting varname="phpkd_chusrn_active" displayorder="10">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>1</defaultvalue>
+			</setting>
+			<setting varname="phpkd_chusrn_allow_denied_to_others" displayorder="20">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="phpkd_chusrn_allow_old_usernames" displayorder="30">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>1</defaultvalue>
+			</setting>
+			<setting varname="phpkd_chusrn_allow_own_old_usernames" displayorder="40">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>1</defaultvalue>
+			</setting>
+			<setting varname="phpkd_chusrn_auto_prune" displayorder="50">
+				<datatype>free</datatype>
+				<defaultvalue>90</defaultvalue>
+			</setting>
+			<setting varname="phpkd_chusrn_staff_notifications" displayorder="60">
+				<datatype>free</datatype>
+				<optioncode>select:piped
+none|phpkd_chusrn_notifications_none
+pm|phpkd_chusrn_notifications_pms
+email|phpkd_chusrn_notifications_emails
+both|phpkd_chusrn_notifications_both</optioncode>
+				<defaultvalue>both</defaultvalue>
+			</setting>
+			<setting varname="phpkd_chusrn_users_notifications" displayorder="70">
+				<datatype>free</datatype>
+				<optioncode>select:piped
+none|phpkd_chusrn_notifications_none
+pm|phpkd_chusrn_notifications_pms
+email|phpkd_chusrn_notifications_emails
+both|phpkd_chusrn_notifications_both</optioncode>
+				<defaultvalue>both</defaultvalue>
+			</setting>
+			<setting varname="phpkd_chusrn_request_notification_sender" displayorder="80">
+				<datatype>username</datatype>
+				<optioncode>username</optioncode>
+				<validationcode>return ($data !== false);</validationcode>
+			</setting>
+			<setting varname="phpkd_chusrn_report_notification_sender" displayorder="90">
+				<datatype>username</datatype>
+				<optioncode>username</optioncode>
+				<validationcode>return ($data !== false);</validationcode>
+			</setting>
+			<setting varname="phpkd_chusrn_staff_recipients" displayorder="100">
+				<datatype>free</datatype>
+			</setting>
+			<setting varname="phpkd_chusrn_pm_savecopy" displayorder="110">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>1</defaultvalue>
+			</setting>
+			<setting varname="phpkd_chusrn_pm_iconid" displayorder="120">
+				<datatype>number</datatype>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="phpkd_chusrn_pm_signature" displayorder="130">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>1</defaultvalue>
+			</setting>
+			<setting varname="phpkd_chusrn_pm_disablesmilies" displayorder="140">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="phpkd_chusrn_pm_receipt" displayorder="150">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>1</defaultvalue>
+			</setting>
+			<setting varname="phpkd_chusrn_pm_overridequota" displayorder="160">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>1</defaultvalue>
+			</setting>
+		</settinggroup>
+	</options>
+	<helptopics>
+	</helptopics>
+	<cronentries>
+	</cronentries>
+	<faqentries>
+	</faqentries>
+</product>

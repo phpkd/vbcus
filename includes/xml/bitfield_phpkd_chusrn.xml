@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<bitfields product="phpkd_chusrn">
+	<bitfielddefs>
+		<group name="ugp">
+			<group name="changeusernameperms">
+				<bitfield name="canchusername" group="phpkd_chusrn_perms_2" phrase="phpkd_chusrn_canchusername" install="2,5,6,7">1</bitfield>
+				<bitfield name="chusernameautoapp" group="phpkd_chusrn_perms_2" phrase="phpkd_chusrn_autoapp" install="2,5,6,7">2</bitfield>
+				<bitfield name="canviewchusernamelog" group="phpkd_chusrn_perms_2" phrase="phpkd_chusrn_canviewusernamelog" install="2,5,6,7">4</bitfield>
+				<bitfield name="canviewotherchusernamelog" group="phpkd_chusrn_perms_2" phrase="phpkd_chusrn_canviewotherusernamelog" install="2,5,6,7">8</bitfield>
+				<bitfield name="chusernameforcereactivate" group="phpkd_chusrn_perms_2" phrase="phpkd_chusrn_forcereactivate" install="2,5,6,7">16</bitfield>
+				<bitfield intperm="true" name="canchusernameminposts" group="phpkd_chusrn_perms_2" phrase="phpkd_chusrn_min_posts" install="2,5,6,7">0</bitfield>
+				<bitfield intperm="true" name="canchusernameminrep" group="phpkd_chusrn_perms_2" phrase="phpkd_chusrn_min_rep" install="2,5,6,7">0</bitfield>
+				<bitfield intperm="true" name="canchusernameregdays" group="phpkd_chusrn_perms_2" phrase="phpkd_chusrn_reg_days" install="2,5,6,7">0</bitfield>
+				<bitfield intperm="true" name="canchusernamesimlperiod" group="phpkd_chusrn_perms_2" phrase="phpkd_chusrn_simultaneous_changes" install="2,5,6,7">0</bitfield>
+			</group>
+		</group>
+	</bitfielddefs>
+	<ignoregroups>
+		<group name="phpkd_chusrn_permissions_2" ignoregroups="1" />
+	</ignoregroups>
+</bitfields>
+
+<!-- CVS: $RCSfile$ - $Revision: 15806 $ -->

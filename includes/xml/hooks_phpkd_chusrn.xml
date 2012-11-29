@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<hooks>
+
+	<hooktype type="phpkd_chusrn">
+		<hook>profile_editpassword_start</hook>
+		<hook>profile_updatepassword_start</hook>
+		<hook>profile_updatepassword_complete</hook>
+	</hooktype>
+
+</hooks>
+
+<!-- CVS: $RCSfile$ - $Revision: 10000 $ -->

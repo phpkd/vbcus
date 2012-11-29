@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<navgroups product="phpkd_chusrn" master="false">
+
+	<navgroup phrase="users" permissions="canadminusers" displayorder="110">
+
+		<navoption displayorder="25">
+			<phrase>phpkd_chusrn_requests</phrase>
+			<link>phpkd_chusrn.php</link>
+		</navoption>
+
+	</navgroup>
+
+</navgroups>
+
+<!-- CVS: $RCSfile: cpnav_phpkd_chusrn.xml,v $ - $Revision: 1.00 $ -->
